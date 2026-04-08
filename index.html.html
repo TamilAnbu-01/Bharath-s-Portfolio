@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bharath B — Graphic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ─────────────────────────────────────────
+   ROOT & RESET
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:       #080808;
+  --surface:  #0f0f0f;
+  --border:   rgba(255,255,255,0.07);
+  --accent:   #c8a96e;
+  --accent2:  #e8c98a;
+  --text:     #e2ddd5;
+  --muted:    rgba(226,221,213,0.38);
+  --white:    #f5f2ee;
+  --f-display:'Syne', sans-serif;
+  --f-serif:  'Cormorant Garamond', serif;
+  --f-mono:   'DM Mono', monospace;
+  --ease:     cubic-bezier(0.76,0,0.24,1);
+}
+html { font-size: 20px; scroll-behavior: auto; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--f-display);
+  overflow-x: hidden;
+  cursor: none;
+}
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+a { text-decoration: none; color: inherit; cursor: none; }
+button { cursor: none; }
+
+/* ─────────────────────────────────────────
+   CUSTOM CURSOR
+───────────────────────────────────────── */
+#c-dot, #c-ring {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+#c-dot  { width: 6px; height: 6px; background: var(--accent); transition: transform 0.08s; }
+#c-ring {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(200,169,110,0.5);
+  transition: transform 0.18s var(--ease), width 0.3s, height 0.3s, opacity 0.3s;
+  opacity: 0.7;
+}
+body.cursor-hover #c-ring { width: 52px; height: 52px; opacity: 0.3; }
+body.cursor-hover #c-dot  { transform: translate(-50%,-50%) scale(1.8); }
+
+/* ─────────────────────────────────────────
+   PARTICLE CANVAS
+───────────────────────────────────────── */
+#particle-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+#particle-canvas.visible { opacity: 1; }
+
+/* ─────────────────────────────────────────
+   PAGE TRANSITION OVERLAY
+───────────────────────────────────────── */
+#transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+.t-strip {
+  flex: 1;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  will-change: transform;
+}
+
+/* ─────────────────────────────────────────
+   NAV
+───────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 60px;
+  mix-blend-mode: normal;
+}
+nav::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+.nav-logo {
+  font-family: var(--f-serif);
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  font-style: italic;
+}
+.nav-logo strong { font-style: normal; font-weight: 600; color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.nav-btn {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 18px;
+  border: none;
+  background: transparent;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 18px; right: 18px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.35s var(--ease);
+}
+.nav-btn:hover, .nav-btn.active { color: var(--accent); }
+.nav-btn:hover::after, .nav-btn.active::after { transform: scaleX(1); }
+
+.nav-contact {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 10px 22px;
+  border: none;
+  margin-left: 16px;
+  transition: background 0.3s, transform 0.3s var(--ease);
+}
+.nav-contact:hover { background: var(--accent2); transform: translateY(-1px); }
+
+/* ─────────────────────────────────────────
+   PAGES WRAPPER
+───────────────────────────────────────── */
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  display: none;
+}
+.page.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────
+   HOME — HERO
+───────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 140px 60px 80px;
+  position: relative;
+}
+
+.hero-label {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 36px;
+  display: flex; align-items: center; gap: 14px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.3s var(--ease) forwards;
+}
+.hero-label::before {
+  content: '';
+  width: 36px; height: 1px;
+  background: var(--accent);
+}
+
+.hero-h1 {
+  font-family: var(--f-serif);
+  font-size: clamp(3.8rem, 8.5vw, 9rem);
+  font-weight: 300;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 0;
+  opacity: 0;
+  animation: fadeUp 1s 0.5s var(--ease) forwards;
+}
+.hero-h1 em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 300;
+}
+.hero-h1 .line2 { padding-left: clamp(60px, 12vw, 200px); }
+
+.hero-sub {
+  margin-top: 36px;
+  max-width: 480px;
+  font-family: var(--f-serif);
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--muted);
+  opacity: 0;
+  animation: fadeUp 1s 0.75s var(--ease) forwards;
+}
+.hero-sub strong { color: var(--text); font-weight: 400; }
+
+.hero-bottom {
+  margin-top: 60px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  opacity: 0;
+  animation: fadeUp 1s 1s var(--ease) forwards;
+}
+.hero-cta {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 14px 32px;
+  border: none;
+  transition: background 0.3s, transform 0.3s var(--ease);
+  display: inline-block;
+}
+.hero-cta:hover { background: var(--accent2); transform: translateY(-2px); }
+.hero-cta-ghost {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(200,169,110,0.3);
+  padding: 14px 32px;
+  transition: border-color 0.3s, transform 0.3s var(--ease);
+  display: inline-block;
+}
+.hero-cta-ghost:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.hero-stat-row {
+  display: flex; gap: 40px;
+  margin-left: auto;
+}
+.h-stat { display: flex; flex-direction: column; align-items: flex-end; }
+.h-stat-n {
+  font-family: var(--f-serif);
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+}
+.h-stat-l {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px; left: 60px;
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 1s 1.4s var(--ease) forwards;
+}
+.scroll-line {
+  width: 40px; height: 1px;
+  background: var(--muted);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--accent);
+  animation: scanLine 2s 2s ease-in-out infinite;
+}
+@keyframes scanLine {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+/* ─────────────────────────────────────────
+   HOME — SELECTED WORK STRIP
+───────────────────────────────────────── */
+.work-strip-section {
+  padding: 100px 60px;
+  border-top: 1px solid var(--border);
+}
+.section-label {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 60px;
+  display: flex; align-items: center; gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 16px;
+}
+.work-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--surface);
+  group: true;
+}
+.work-item:first-child { aspect-ratio: unset; grid-row: span 2; }
+.work-item img {
+  transition: transform 0.8s var(--ease);
+  filter: brightness(0.75) saturate(0.8);
+}
+.work-item:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.6) saturate(0.6);
+}
+.work-item-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 24px;
+  background: linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 100%);
+  transform: translateY(8px);
+  transition: transform 0.4s var(--ease);
+}
+.work-item:hover .work-item-info { transform: translateY(0); }
+.work-item-tag {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.work-item-title {
+  font-family: var(--f-serif);
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--white);
+}
+
+/* Services row */
+.services-row {
+  padding: 80px 60px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.service-card {
+  background: var(--bg);
+  padding: 40px 32px;
+  transition: background 0.35s;
+}
+.service-card:hover { background: var(--surface); }
+.service-num {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 20px;
+}
+.service-title {
+  font-family: var(--f-serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.service-desc {
+  font-family: var(--f-serif);
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+/* Clients / tools strip */
+.tools-marquee-wrap {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 22px 0;
+  overflow: hidden;
+}
+.tools-marquee {
+  display: flex;
+  gap: 60px;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+.tool-item {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 10px;
+}
+.tool-item::before { content: '✦'; color: var(--accent); font-size: 0.5rem; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─────────────────────────────────────────
+   ABOUT PAGE
+───────────────────────────────────────── */
+.about-hero {
+  padding: 140px 60px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 80px;
+  align-items: start;
+  border-bottom: 1px solid var(--border);
+}
+.about-left {}
+.about-tag {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+}
+.about-h2 {
+  font-family: var(--f-serif);
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 32px;
+}
+.about-h2 em { font-style: italic; color: var(--accent); }
+.about-body {
+  font-family: var(--f-serif);
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2;
+  color: var(--muted);
+}
+.about-body p + p { margin-top: 16px; }
+.about-body strong { color: var(--text); font-weight: 400; }
+
+.about-right {}
+.about-img-wrap {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--surface);
+  max-height: 520px;
+}
+.about-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+}
+.about-monogram {
+  font-family: var(--f-serif);
+  font-size: 8rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--accent);
+  opacity: 0.4;
+  line-height: 1;
+}
+.about-name-tag {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* Experience timeline */
+.exp-section {
+  padding: 80px 60px;
+  border-bottom: 1px solid var(--border);
+}
+.exp-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 40px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.exp-row:last-child { border-bottom: none; }
+.exp-row:hover { background: rgba(255,255,255,0.01); }
+.exp-date {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+.exp-role {
+  font-family: var(--f-serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.exp-company {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.exp-desc {
+  font-family: var(--f-serif);
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+/* Education */
+.edu-section {
+  padding: 80px 60px;
+  background: var(--surface);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.edu-block {}
+.edu-degree {
+  font-family: var(--f-serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.edu-school {
+  font-family: var(--f-serif);
+  font-size: 0.95rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.edu-meta {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.cgpa-badge {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: 1px solid rgba(200,169,110,0.3);
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+}
+
+/* ─────────────────────────────────────────
+   SKILLS PAGE
+───────────────────────────────────────── */
+.skills-hero {
+  padding: 140px 60px 80px;
+  border-bottom: 1px solid var(--border);
+}
+.skills-h2 {
+  font-family: var(--f-serif);
+  font-size: clamp(3rem, 6vw, 6.5rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.0;
+  margin-bottom: 24px;
+}
+.skills-h2 em { font-style: italic; color: var(--accent); }
+.skills-sub {
+  font-family: var(--f-serif);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 580px;
+}
+
+/* Tools grid */
+.tools-section { padding: 80px 60px; border-bottom: 1px solid var(--border); }
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-top: 48px;
+}
+.tool-card {
+  background: var(--bg);
+  padding: 36px 32px;
+  transition: background 0.35s;
+  position: relative;
+  overflow: hidden;
+}
+.tool-card:hover { background: var(--surface); }
+.tool-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.5s var(--ease);
+}
+.tool-card:hover::after { width: 100%; }
+.tool-card-cat {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.tool-card-name {
+  font-family: var(--f-serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.tool-card-level {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+}
+.level-bar {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  position: relative;
+}
+.level-fill {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  background: var(--accent);
+  transition: width 1s 0.3s var(--ease);
+}
+
+/* AI tools special */
+.ai-section {
+  padding: 80px 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.ai-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 48px;
+}
+.ai-pill {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px 20px;
+  transition: all 0.3s;
+}
+.ai-pill:hover, .ai-pill.highlight {
+  color: var(--accent);
+  border-color: rgba(200,169,110,0.4);
+  background: rgba(200,169,110,0.05);
+}
+
+/* Work samples gallery */
+.gallery-section { padding: 80px 60px; border-bottom: 1px solid var(--border); }
+.gallery-tabs {
+  display: flex; gap: 0;
+  margin-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+}
+.g-tab {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.3s;
+}
+.g-tab:hover { color: var(--text); }
+.g-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.gallery-panel { display: none; }
+.gallery-panel.active { display: grid; }
+
+.gallery-masonry {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.gallery-masonry-2 {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.g-item {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  cursor: none;
+}
+.g-item img {
+  transition: transform 0.7s var(--ease), filter 0.5s;
+  filter: brightness(0.9) saturate(0.9);
+}
+.g-item:hover img {
+  transform: scale(1.05);
+  filter: brightness(0.7) saturate(0.7);
+}
+.g-item-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: flex-end; align-items: flex-start;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.g-item:hover .g-item-overlay { opacity: 1; }
+.g-item-title {
+  font-family: var(--f-serif);
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--white);
+}
+.g-item-type {
+  font-family: var(--f-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* Workflow */
+.workflow-section {
+  padding: 80px 60px;
+  background: var(--surface);
+}
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-top: 48px;
+}
+.w-step {
+  background: var(--bg);
+  padding: 36px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.w-step:hover { background: #111; }
+.w-num {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.w-title {
+  font-family: var(--f-serif);
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.w-desc {
+  font-family: var(--f-serif);
+  font-size: 0.82rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.w-icon {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Other skills */
+.other-skills-section { padding: 80px 60px; }
+.skill-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 48px;
+}
+.skill-chip {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.skill-chip::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(200,169,110,0.04);
+  transform: translateX(-100%);
+  transition: transform 0.4s var(--ease);
+}
+.skill-chip:hover::before { transform: translateX(0); }
+.skill-chip:hover { border-color: rgba(200,169,110,0.25); }
+.sc-name {
+  font-family: var(--f-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.sc-cat {
+  font-family: var(--f-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ─────────────────────────────────────────
+   LIGHTBOX
+───────────────────────────────────────── */
+#lightbox {
+  position: fixed; inset: 0;
+  z-index: 9980;
+  background: rgba(8,8,8,0.97);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+}
+#lightbox.open { opacity: 1; pointer-events: all; }
+#lightbox img {
+  max-width: 85vw; max-height: 85vh;
+  object-fit: contain;
+  transform: scale(0.92);
+  transition: transform 0.4s var(--ease);
+}
+#lightbox.open img { transform: scale(1); }
+#lb-close {
+  position: absolute; top: 32px; right: 40px;
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  background: none; border: none;
+  text-transform: uppercase;
+  cursor: none;
+}
+#lb-close:hover { color: var(--accent); }
+
+/* ─────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────── */
+footer {
+  padding: 60px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+}
+.footer-logo {
+  font-family: var(--f-serif);
+  font-size: 1.1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--muted);
+}
+.footer-contact {
+  display: flex; flex-direction: column; gap: 4px; align-items: center;
+}
+.footer-email {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+}
+.footer-phone {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+.footer-copy {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.85s var(--ease), transform 0.85s var(--ease);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav { padding: 20px 24px; }
+  .nav-contact { display: none; }
+  .hero { padding: 120px 24px 60px; }
+  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .hero-stat-row { margin-left: 0; }
+  .work-grid { grid-template-columns: 1fr 1fr; }
+  .work-item:first-child { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
+  .services-row { grid-template-columns: 1fr 1fr; }
+  .about-hero { grid-template-columns: 1fr; padding: 120px 24px 60px; }
+  .about-right { display: none; }
+  .exp-row { grid-template-columns: 1fr; gap: 12px; }
+  .edu-section { grid-template-columns: 1fr; padding: 60px 24px; }
+  .tools-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-masonry, .gallery-masonry-2 { grid-template-columns: 1fr 1fr; }
+  .workflow-steps { grid-template-columns: 1fr; }
+  .skill-list { grid-template-columns: repeat(2, 1fr); }
+  .work-strip-section, .services-row, .tools-section, .ai-section,
+  .gallery-section, .workflow-section, .other-skills-section,
+  .exp-section, .skills-hero, .footer { padding-left: 24px; padding-right: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── CURSOR ────────────────────────── -->
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+
+<!-- ── PARTICLE CANVAS ───────────────── -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ── PAGE TRANSITION ───────────────── -->
+<div id="transition-overlay">
+  <div class="t-strip"></div>
+  <div class="t-strip"></div>
+  <div class="t-strip"></div>
+</div>
+
+<!-- ── LIGHTBOX ──────────────────────── -->
+<div id="lightbox">
+  <button id="lb-close">✕ &nbsp; Close</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<!-- ══════════════════════════════════════
+     NAV
+═══════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#" onclick="navigateTo('home'); return false;"><strong>Bharath</strong>.B</a>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="navigateTo('home')">Home</button>
+    <button class="nav-btn" onclick="navigateTo('about')">About</button>
+    <button class="nav-btn" onclick="navigateTo('skills')">Skills & Work</button>
+  </div>
+  <a class="nav-contact" href="mailto:bharathjeyson@gmail.com">Get In Touch</a>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HOME PAGE
+═══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-label">Graphic Designer &nbsp;·&nbsp; 6+ Years Experience</div>
+    <h1 class="hero-h1">
+      Visual<br>
+      <em>Stories</em><br>
+      <span class="line2">Crafted</span>
+    </h1>
+    <p class="hero-sub">
+      Turning brand ideas into <strong>compelling visual experiences</strong> — from social media campaigns and caravan design to digital marketing and beyond. Based in Australia, working globally.
+    </p>
+    <div class="hero-bottom">
+      <button class="hero-cta" onclick="navigateTo('skills')">View My Work</button>
+      <button class="hero-cta-ghost" onclick="navigateTo('about')">About Me</button>
+      <div class="hero-stat-row">
+        <div class="h-stat"><span class="h-stat-n">6+</span><span class="h-stat-l">Years Active</span></div>
+        <div class="h-stat"><span class="h-stat-n">50+</span><span class="h-stat-l">Projects Done</span></div>
+        <div class="h-stat"><span class="h-stat-n">12+</span><span class="h-stat-l">Tools Mastered</span></div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll to explore
+    </div>
+  </section>
+
+  <!-- Tools Marquee -->
+  <div class="tools-marquee-wrap">
+    <div class="tools-marquee">
+      <span class="tool-item">Photoshop</span>
+      <span class="tool-item">Illustrator</span>
+      <span class="tool-item">Figma</span>
+      <span class="tool-item">Canva</span>
+      <span class="tool-item">Adobe Premiere Pro</span>
+      <span class="tool-item">Midjourney</span>
+      <span class="tool-item">ChatGPT</span>
+      <span class="tool-item">SEO</span>
+      <span class="tool-item">Digital Marketing</span>
+      <span class="tool-item">HTML</span>
+      <span class="tool-item">Web Scraping</span>
+      <span class="tool-item">NanoBanana</span>
+      <!-- duplicate for seamless loop -->
+      <span class="tool-item">Photoshop</span>
+      <span class="tool-item">Illustrator</span>
+      <span class="tool-item">Figma</span>
+      <span class="tool-item">Canva</span>
+      <span class="tool-item">Adobe Premiere Pro</span>
+      <span class="tool-item">Midjourney</span>
+      <span class="tool-item">ChatGPT</span>
+      <span class="tool-item">SEO</span>
+      <span class="tool-item">Digital Marketing</span>
+      <span class="tool-item">HTML</span>
+      <span class="tool-item">Web Scraping</span>
+      <span class="tool-item">NanoBanana</span>
+    </div>
+  </div>
+
+  <!-- Selected Work -->
+  <section class="work-strip-section">
+    <div class="section-label reveal">Selected Work</div>
+    <div class="work-grid reveal reveal-delay-1">
+
+      <div class="work-item" onclick="openLb('./images/Star Investment = trust, growth, and guaranteed results..jpg')">
+        <img src="./images/Star Investment = trust, growth, and guaranteed results..jpg">
+      </div>
+
+      <div class="work-item" onclick="openLb('./images/2024 Aussie Fivestar Eureka 18_6 Off-Road Touring Caravan – Explore Without Limits!.jpg')">
+        <img src="./images/2024 Aussie Fivestar Eureka 18_6 Off-Road Touring Caravan – Explore Without Limits!.jpg">
+      </div>
+
+      <div class="work-item" onclick="openLb('./images/Burger Design For Homemade copy.jpg')">
+        <img src="./images/Burger Design For Homemade copy.jpg">
+      </div>
+
+      <div class="work-item" onclick="openLb('./images/2easy IT.jpg')">
+        <img src="./images/2easy IT.jpg">
+      </div>
+
+      <div class="work-item" onclick="openLb('./images/PLIX Design.jpg')">
+        <img src="./images/PLIX Design.jpg">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services-row">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-title">Brand Visual Design</div>
+      <div class="service-desc">Logos, brand identity, social media graphics and print-ready assets that define and elevate brands.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <div class="service-title">Digital Marketing Creatives</div>
+      <div class="service-desc">High-converting ad creatives, banners, and campaign visuals optimised for digital platforms.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <div class="service-title">Product & Caravan Design</div>
+      <div class="service-desc">Exterior and interior layout visuals for caravan brands — from concept to production-ready files.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">04</div>
+      <div class="service-title">AI-Enhanced Design</div>
+      <div class="service-desc">Leveraging Midjourney, ChatGPT and other AI tools to accelerate creative workflows and ideation.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Bharath.B</div>
+    <div class="footer-contact">
+      <div class="footer-email">bharathjeyson@gmail.com</div>
+      <div class="footer-phone">+91 80720 83856</div>
+    </div>
+    <div class="footer-copy">© 2025 Bharath B — All Rights Reserved</div>
+  </footer>
+
+</div><!-- /page-home -->
+
+<!-- ══════════════════════════════════════
+     ABOUT PAGE
+═══════════════════════════════════════ -->
+<div class="page" id="page-about">
+
+  <section class="about-hero">
+    <div class="about-left">
+      <div class="about-tag reveal">About Me</div>
+      <h2 class="about-h2 reveal reveal-delay-1">Designing with<br><em>purpose</em> &<br>precision.</h2>
+      <div class="about-body reveal reveal-delay-2">
+        <p>I'm <strong>Bharath B</strong>, a Senior Graphic Design Specialist with over <strong>6+ years of experience</strong> crafting visual identities that leave a lasting impression. Based at Web Logix Australia, I manage end-to-end creative processes across digital and print.</p>
+        <p>My core expertise lies in <strong>caravan-themed visual content</strong> — bringing concepts from initial brief to final production-ready delivery. I combine technical proficiency in Adobe tools with a strong eye for composition, colour, and storytelling.</p>
+        <p>Beyond design, I integrate <strong>SEO knowledge, web scraping with Python, and AI tools</strong> to deliver smarter, more effective creative outcomes for clients across Australia and beyond.</p>
+      </div>
+    </div>
+    <div class="about-right reveal">
+      <div class="about-img-wrap">
+        <div class="about-img-placeholder">
+          <div class="about-monogram">B</div>
+          <div class="about-name-tag">Bharath · Designer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="exp-section">
+    <div class="section-label reveal">Experience</div>
+    <div class="exp-row reveal">
+      <div class="exp-date">May 2019 — Present</div>
+      <div>
+        <div class="exp-role">Senior Graphic Design Specialist</div>
+        <div class="exp-company">Web Logix Australia</div>
+        <div class="exp-desc">Designed caravan interior and exterior layouts using Photoshop, delivering visually compelling and production-ready assets tailored to client specifications. Developed social media banners, posters, and promotional visuals that enhanced brand visibility across digital platforms. Managed multiple design projects remotely, meeting tight deadlines while maintaining high creative standards. Integrated design best practices with SEO techniques, optimising images for improved web performance and audience engagement.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="edu-section">
+    <div class="reveal">
+      <div class="section-label" style="margin-bottom:40px;">Education</div>
+      <div class="edu-degree">Bachelor of Computer Science</div>
+      <div class="edu-school">JKKN College of Arts & Science, Periyar University</div>
+      <div class="edu-meta">Jul 2014 — Jul 2018</div>
+      <div class="cgpa-badge">CGPA: 6.92 / 10</div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="section-label" style="margin-bottom:40px;">Philosophy</div>
+      <div class="about-body">
+        <p><strong>Design is not decoration</strong> — it is communication. Every pixel, every spacing decision, every colour choice either serves the message or undermines it.</p>
+        <p>I approach every project with curiosity and discipline, staying current with design trends, AI advancements, and platform-specific requirements to ensure work that is not only beautiful but <strong>strategically effective</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Bharath.B</div>
+    <div class="footer-contact">
+      <div class="footer-email">bharathjeyson@gmail.com</div>
+      <div class="footer-phone">+91 80720 83856</div>
+    </div>
+    <div class="footer-copy">© 2025 Bharath B</div>
+  </footer>
+
+</div><!-- /page-about -->
+
+<!-- ══════════════════════════════════════
+     SKILLS PAGE
+═══════════════════════════════════════ -->
+<div class="page" id="page-skills">
+
+  <section class="skills-hero">
+    <h2 class="skills-h2 reveal">Skills &<br><em>Work Samples</em></h2>
+    <p class="skills-sub reveal reveal-delay-1">A curated collection of design tools, AI platforms, and real-world project samples spanning investment branding, caravan marketing, product design, and IT services.</p>
+  </section>
+
+  <!-- Design Tools -->
+  <section class="tools-section">
+    <div class="section-label reveal">Design Platforms</div>
+    <div class="tools-grid">
+      <div class="tool-card reveal">
+        <div class="tool-card-cat">Primary Tool</div>
+        <div class="tool-card-name">Adobe Photoshop</div>
+        <div class="tool-card-level">Expert <div class="level-bar"><div class="level-fill" style="width:95%"></div></div></div>
+      </div>
+      <div class="tool-card reveal reveal-delay-1">
+        <div class="tool-card-cat">Vector Design</div>
+        <div class="tool-card-name">Adobe Illustrator</div>
+        <div class="tool-card-level">Expert <div class="level-bar"><div class="level-fill" style="width:90%"></div></div></div>
+      </div>
+      <div class="tool-card reveal reveal-delay-2">
+        <div class="tool-card-cat">UI / Prototyping</div>
+        <div class="tool-card-name">Figma</div>
+        <div class="tool-card-level">Proficient <div class="level-bar"><div class="level-fill" style="width:80%"></div></div></div>
+      </div>
+      <div class="tool-card reveal">
+        <div class="tool-card-cat">Video Editing</div>
+        <div class="tool-card-name">Adobe Premiere Pro</div>
+        <div class="tool-card-level">Proficient <div class="level-bar"><div class="level-fill" style="width:78%"></div></div></div>
+      </div>
+      <div class="tool-card reveal reveal-delay-1">
+        <div class="tool-card-cat">Quick Design</div>
+        <div class="tool-card-name">Canva</div>
+        <div class="tool-card-level">Expert <div class="level-bar"><div class="level-fill" style="width:92%"></div></div></div>
+      </div>
+      <div class="tool-card reveal reveal-delay-2">
+        <div class="tool-card-cat">AI Image Gen</div>
+        <div class="tool-card-name">Midjourney · OpenArt</div>
+        <div class="tool-card-level">Advanced <div class="level-bar"><div class="level-fill" style="width:85%"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Tools -->
+  <section class="ai-section">
+    <div class="section-label reveal">AI Tools & Platforms</div>
+    <div class="ai-grid reveal reveal-delay-1">
+      <span class="ai-pill highlight">Midjourney</span>
+      <span class="ai-pill highlight">ChatGPT</span>
+      <span class="ai-pill highlight">OpenArt</span>
+      <span class="ai-pill highlight">NanoBanana</span>
+      <span class="ai-pill">DALL·E</span>
+      <span class="ai-pill">Adobe Firefly</span>
+      <span class="ai-pill">Stable Diffusion</span>
+      <span class="ai-pill">Runway ML</span>
+      <span class="ai-pill">Claude AI</span>
+      <span class="ai-pill">Gemini</span>
+      <span class="ai-pill">Remove.bg</span>
+      <span class="ai-pill">Upscayl</span>
+    </div>
+  </section>
+
+  <!-- Work Samples Gallery -->
+  <section class="gallery-section">
+    <div class="section-label reveal">Work Samples</div>
+
+    <div class="gallery-tabs reveal">
+      <button class="g-tab active" onclick="switchTab('all', this)">All Work</button>
+      <button class="g-tab" onclick="switchTab('invest', this)">Investment</button>
+      <button class="g-tab" onclick="switchTab('caravan', this)">Caravans</button>
+      <button class="g-tab" onclick="switchTab('product', this)">Products</button>
+      <button class="g-tab" onclick="switchTab('it', this)">IT &amp; Digital</button>
+    </div>
+
+    <!-- ALL -->
+    <div class="gallery-panel active gallery-masonry" id="tab-all">
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Star Investment = trust, growth, and guaranteed results..jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Branding</div><div class="g-item-title">Star Investment — Trust & Growth</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Proven Track Record.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Social Media</div><div class="g-item-title">Proven Track Record</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Introduction to Property Market Cycles.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Educational</div><div class="g-item-title">Property Market Cycles</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/2024 Aussie Fivestar Eureka 18_6 Off-Road Touring Caravan – Explore Without Limits!.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan</div><div class="g-item-title">Aussie Fivestar Eureka</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Grand City Explorer 18’6 Off-Road Luxury Caravan Now Available!.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan</div><div class="g-item-title">Grand City Explorer</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Piazza PZ from Royal Flair Caravan.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan</div><div class="g-item-title">Royal Flair Piazza</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Burger Design For Homemade copy.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">F&B</div><div class="g-item-title">Homemade Classic Burger</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/PLIX Design.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Product</div><div class="g-item-title">Plix Skincare</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Girls Hand Bag.png" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">E-commerce</div><div class="g-item-title">Caprese Handbag Store</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/2easy IT.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">IT</div><div class="g-item-title">2EasyIT — One Step</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/One step can take your business into a whole new world .jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">IT</div><div class="g-item-title">2EasyIT — New World</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Water Access.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Real Estate</div><div class="g-item-title">Lake Narracan — Water Access</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Scenic Walking Trails.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Real Estate</div><div class="g-item-title">Scenic Walking Trails</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Premium Land in Lochinvar.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Real Estate</div><div class="g-item-title">Premium Land — Lochinvar</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Cocount.png" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">E-commerce UI</div><div class="g-item-title">KMP Coconut Oil Checkout</div></div>
+      </div>
+    </div>
+
+    <!-- INVESTMENT -->
+    <div class="gallery-panel gallery-masonry" id="tab-invest">
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Star Investment = trust, growth, and guaranteed results..jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Branding</div><div class="g-item-title">Star Investment — Trust & Growth</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Proven Track Record.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Social Media</div><div class="g-item-title">Proven Track Record</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Introduction to Property Market Cycles.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Educational</div><div class="g-item-title">Property Market Cycles</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Water Access.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Real Estate</div><div class="g-item-title">Lake Narracan — Water Access</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Scenic Walking Trails.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Real Estate</div><div class="g-item-title">Scenic Walking Trails</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Premium Land in Lochinvar.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Real Estate</div><div class="g-item-title">Premium Land — Lochinvar</div></div>
+      </div>
+    </div>
+
+    <!-- CARAVAN -->
+    <div class="gallery-panel gallery-masonry" id="tab-caravan">
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/2024 Aussie Fivestar Eureka 18_6 Off-Road Touring Caravan – Explore Without Limits!.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan</div><div class="g-item-title">Aussie Fivestar Eureka</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Grand City Explorer 18’6 Off-Road Luxury Caravan Now Available!.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan</div><div class="g-item-title">Grand City Explorer</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Piazza PZ from Royal Flair Caravan.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan</div><div class="g-item-title">Royal Flair Piazza</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/CFS - FB.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan Marketplace</div><div class="g-item-title">Caravans For Sale — Banner</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/DEO-3-1.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Caravan Exterior</div><div class="g-item-title">Auscraft RV — Duo</div></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT -->
+    <div class="gallery-panel gallery-masonry" id="tab-product">
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/PLIX Design.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">Product</div><div class="g-item-title">Plix Skincare</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Burger Design For Homemade copy.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">F&B</div><div class="g-item-title">Homemade Classic Burger</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Girls Hand Bag.png" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">E-commerce</div><div class="g-item-title">Caprese Handbag UI</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/Cocount.png" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">E-commerce UI</div><div class="g-item-title">KMP Coconut Oil Checkout</div></div>
+      </div>
+    </div>
+
+    <!-- IT -->
+    <div class="gallery-panel gallery-masonry-2" id="tab-it">
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/2easy IT.jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">IT Services</div><div class="g-item-title">2EasyIT — One Step</div></div>
+      </div>
+      <div class="g-item" onclick="openLb(this.querySelector('img').src)">
+        <img src="./images/One step can take your business into a whole new world .jpg" alt="">
+        <div class="g-item-overlay"><div class="g-item-type">IT Services</div><div class="g-item-title">2EasyIT — Digital World</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Workflow -->
+  <section class="workflow-section">
+    <div class="section-label reveal">My Design Workflow</div>
+    <div class="workflow-steps">
+      <div class="w-step reveal">
+        <div class="w-icon">📋</div>
+        <div class="w-num">01</div>
+        <div class="w-title">Brief & Discovery</div>
+        <div class="w-desc">Understanding the brand, audience, goals, and constraints before any pixel is placed.</div>
+      </div>
+      <div class="w-step reveal reveal-delay-1">
+        <div class="w-icon">💡</div>
+        <div class="w-num">02</div>
+        <div class="w-title">Concept & Ideation</div>
+        <div class="w-desc">Mood boards, references, and AI-assisted concept generation using Midjourney and ChatGPT.</div>
+      </div>
+      <div class="w-step reveal reveal-delay-2">
+        <div class="w-icon">✏️</div>
+        <div class="w-num">03</div>
+        <div class="w-title">Design Execution</div>
+        <div class="w-desc">High-fidelity design in Photoshop or Illustrator, aligned to brand guidelines and platform specs.</div>
+      </div>
+      <div class="w-step reveal reveal-delay-3">
+        <div class="w-icon">🔄</div>
+        <div class="w-num">04</div>
+        <div class="w-title">Refinement</div>
+        <div class="w-desc">Iterating on feedback, optimising for SEO/performance, and ensuring pixel-perfect delivery.</div>
+      </div>
+      <div class="w-step reveal reveal-delay-3">
+        <div class="w-icon">🚀</div>
+        <div class="w-num">05</div>
+        <div class="w-title">Delivery</div>
+        <div class="w-desc">Production-ready files in all required formats, with documentation and handoff support.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Skills -->
+  <section class="other-skills-section">
+    <div class="section-label reveal">Additional Skills</div>
+    <div class="skill-list">
+      <div class="skill-chip reveal">
+        <div class="sc-name">HTML / CSS</div>
+        <div class="sc-cat">Web Development</div>
+      </div>
+      <div class="skill-chip reveal reveal-delay-1">
+        <div class="sc-name">Web Scraping</div>
+        <div class="sc-cat">Python · Data</div>
+      </div>
+      <div class="skill-chip reveal reveal-delay-2">
+        <div class="sc-name">SEO</div>
+        <div class="sc-cat">Search Optimisation</div>
+      </div>
+      <div class="skill-chip reveal reveal-delay-3">
+        <div class="sc-name">Digital Marketing</div>
+        <div class="sc-cat">Social · Ads · Strategy</div>
+      </div>
+      <div class="skill-chip reveal">
+        <div class="sc-name">Content Strategy</div>
+        <div class="sc-cat">Copywriting · Planning</div>
+      </div>
+      <div class="skill-chip reveal reveal-delay-1">
+        <div class="sc-name">Brand Identity</div>
+        <div class="sc-cat">Visual Systems</div>
+      </div>
+      <div class="skill-chip reveal reveal-delay-2">
+        <div class="sc-name">Print Design</div>
+        <div class="sc-cat">Production Ready</div>
+      </div>
+      <div class="skill-chip reveal reveal-delay-3">
+        <div class="sc-name">Data Entry & Admin</div>
+        <div class="sc-cat">Backend Support</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Bharath.B</div>
+    <div class="footer-contact">
+      <div class="footer-email">bharathjeyson@gmail.com</div>
+      <div class="footer-phone">+91 80720 83856</div>
+    </div>
+    <div class="footer-copy">© 2025 Bharath B</div>
+  </footer>
+
+</div><!-- /page-skills -->
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+/* ─── Cursor ─── */
+const dot  = document.getElementById('c-dot');
+const ring = document.getElementById('c-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  rx += (mx - rx) * 0.14;
+  ry += (my - ry) * 0.14;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a,button,.g-item,.work-item,.service-card,.tool-card,.skill-chip,.ai-pill').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+/* ─── Particle Network ─── */
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], animId;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x  = Math.random() * W;
+    this.y  = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.r  = Math.random() * 1.5 + 0.5;
+    this.a  = Math.random() * 0.5 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > W) this.vx *= -1;
+    if (this.y < 0 || this.y > H) this.vy *= -1;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,169,110,${this.a})`;
+    ctx.fill();
+  }
+}
+
+function initParticles(count) {
+  particles = [];
+  for (let i = 0; i < count; i++) particles.push(new Particle());
+}
+initParticles(90);
+
+function drawLines() {
+  const maxDist = 130;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (d < maxDist) {
+        const alpha = (1 - d / maxDist) * 0.12;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(200,169,110,${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawLines();
+  animId = requestAnimationFrame(animParticles);
+}
+animParticles();
+setTimeout(() => canvas.classList.add('visible'), 200);
+
+/* ─── Smooth Scroll Reveal ─── */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.08 });
+revealEls.forEach(el => io.observe(el));
+
+/* ─── Page Navigation with Transition ─── */
+const pages   = { home: 'page-home', about: 'page-about', skills: 'page-skills' };
+const navBtns = document.querySelectorAll('.nav-btn');
+let current   = 'home';
+let isAnimating = false;
+
+const strips = document.querySelectorAll('.t-strip');
+
+function animStrips(direction, cb) {
+  const dur = 0.32, stagger = 0.06;
+  if (direction === 'in') {
+    strips.forEach((s, i) => {
+      s.style.transition = `transform ${dur}s cubic-bezier(0.76,0,0.24,1) ${i * stagger}s`;
+      s.style.transformOrigin = 'bottom';
+      s.style.transform = 'scaleY(1)';
+    });
+    setTimeout(cb, (strips.length * stagger + dur) * 1000);
+  } else {
+    strips.forEach((s, i) => {
+      s.style.transition = `transform ${dur}s cubic-bezier(0.76,0,0.24,1) ${i * stagger}s`;
+      s.style.transformOrigin = 'top';
+      s.style.transform = 'scaleY(0)';
+    });
+    setTimeout(cb, (strips.length * stagger + dur) * 1000);
+  }
+}
+
+function navigateTo(name, save = true) {
+  if (name === current || isAnimating) return;
+  isAnimating = true;
+
+  // ✅ save only when needed
+  if (save) {
+    localStorage.setItem('currentPage', name);
+  }
+
+  animStrips('in', () => {
+    document.getElementById(pages[current]).classList.remove('active');
+    current = name;
+
+    const nextPage = document.getElementById(pages[name]);
+    nextPage.classList.add('active');
+
+    window.scrollTo(0, 0);
+
+    navBtns.forEach(b => b.classList.remove('active'));
+    navBtns.forEach(b => {
+      if (b.textContent.toLowerCase().includes(name === 'skills' ? 'skill' : name)) {
+        b.classList.add('active');
+      }
+    });
+
+    nextPage.querySelectorAll('.reveal:not(.visible)').forEach(el => io.observe(el));
+
+    setTimeout(() => {
+      animStrips('out', () => {
+        isAnimating = false;
+      });
+    }, 60);
+  });
+}
+
+// expose to nav buttons
+window.navigateTo = navigateTo;
+
+/* ─── Gallery Tabs ─── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.g-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.gallery-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+window.switchTab = switchTab;
+
+/* ─── Lightbox ─── */
+const lb    = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbClose = document.getElementById('lb-close');
+
+function openLb(src) {
+  lbImg.src = src;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+lbClose.addEventListener('click', closeLb);
+lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+function closeLb() {
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+window.openLb = openLb;
+
+/* ─── Smooth native scroll with momentum ─── */
+let lastY = 0, targetY = 0, currentY = 0;
+function smoothScroll() {
+  targetY = window.scrollY;
+  currentY += (targetY - currentY) * 0.08;
+  requestAnimationFrame(smoothScroll);
+}
+smoothScroll();
+
+/* ─── Level bar animation on scroll ─── */
+const levelBars = document.querySelectorAll('.level-fill');
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.width = e.target.style.width;
+    }
+  });
+}, { threshold: 0.5 });
+levelBars.forEach(b => barObs.observe(b));
+
+window.addEventListener('load', () => {
+  const savedPage = localStorage.getItem('currentPage');
+
+  if (savedPage && pages[savedPage]) {
+    navigateTo(savedPage, false);
+  }
+});
+
+</script>
+</body>
+</html>
