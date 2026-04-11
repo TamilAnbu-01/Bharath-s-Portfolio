@@ -472,7 +472,7 @@ nav::after {
   padding: 140px 60px 80px;
   display: grid;
   grid-template-columns: 1fr 1.4fr;
-  gap: 80px;
+  gap: 300px;
   align-items: start;
   border-bottom: 1px solid var(--border);
 }
@@ -505,20 +505,34 @@ nav::after {
 .about-body strong { color: var(--text); font-weight: 400; }
 
 .about-right {}
+.about-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .about-img-wrap {
   position: relative;
-  aspect-ratio: 3/4;
+  aspect-ratio: 5/8;
   overflow: hidden;
   background: var(--surface);
-  max-height: 520px;
+  max-height: 720px;
 }
 .about-img-placeholder {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
   flex-direction: column;
   gap: 16px;
-  background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+  background: transparent;
 }
+
+.about-img-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  pointer-events: none;
+}
+
 .about-monogram {
   font-family: var(--f-serif);
   font-size: 8rem;
@@ -1195,8 +1209,8 @@ footer {
     <div class="about-right reveal">
       <div class="about-img-wrap">
         <div class="about-img-placeholder">
-          <div class="about-monogram">B</div>
-          <div class="about-name-tag">Bharath · Designer</div>
+          <img class="about-img" src="./images/f79e17fa-2eac-42ea-98a1-198bf83a4bce.png" alt="">
+          <div class="about-name-tag">Bharath B · Designer</div>
         </div>
       </div>
     </div>
