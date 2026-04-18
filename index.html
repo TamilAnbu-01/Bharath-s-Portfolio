@@ -1397,7 +1397,7 @@ footer {
       <button class="hero-cta-ghost" onclick="navigateTo('about')">About Me</button>
       <div class="hero-stat-row">
         <div class="h-stat"><span class="h-stat-n">6+</span><span class="h-stat-l">Years Active</span></div>
-        <div class="h-stat"><span class="h-stat-n">50+</span><span class="h-stat-l">Projects Done</span></div>
+        <div class="h-stat"><span class="h-stat-n">70+</span><span class="h-stat-l">Projects Done</span></div>
         <div class="h-stat"><span class="h-stat-n">12+</span><span class="h-stat-l">Tools Mastered</span></div>
       </div>
     </div>
@@ -1667,28 +1667,84 @@ footer {
 ════════════════════════════════════════ */
 const ALL_IMAGES = [
   // ── INVESTMENT / REAL ESTATE ──────────────────────────────────────────
-  { src: './images/Star Investment = trust, growth, and guaranteed results..jpg', title: 'Star Investment — Trust & Growth',  tag: 'Branding',      category: 'investment' },
-  { src: './images/Proven Track Record.jpg',                                       title: 'Proven Track Record',              tag: 'Social Media',   category: 'investment' },
-  { src: './images/Introduction to Property Market Cycles.jpg',                    title: 'Property Market Cycles',           tag: 'Educational',    category: 'investment' },
-  { src: './images/Water Access.jpg',                                              title: 'Lake Narracan — Water Access',     tag: 'Real Estate',    category: 'investment' },
-  { src: './images/Scenic Walking Trails.jpg',                                     title: 'Scenic Walking Trails',            tag: 'Real Estate',    category: 'investment' },
-  { src: './images/Premium Land in Lochinvar.jpg',                                 title: 'Premium Land — Lochinvar',         tag: 'Real Estate',    category: 'investment' },
+  { src: './images/Proven Track Record.jpg',                                       title: 'Proven Track Record',              tag: 'Social Media',  category: 'investment' },
+  { src: './images/Introduction to Property Market Cycles.jpg',                    title: 'Property Market Cycles',           tag: 'Educational',   category: 'investment' },
+  { src: './images/Water Access.jpg',                                              title: 'Lake Narracan — Water Access',     tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Scenic Walking Trails.jpg',                                     title: 'Scenic Walking Trails',            tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Premium Land in Lochinvar.jpg',                                 title: 'Premium Land — Lochinvar',         tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Australias Finest Custom Home Builder , Crafted to Perfection.jpg', title: 'Custom Home Builder',          tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Build Wealth with Monthly Payouts.jpg',                         title: 'Build Wealth',                     tag: 'Wealth',        category: 'investment' },
+  { src: './images/Build Your Dream Home on Lot 605.jpg',                          title: 'Build Your Dream Home',            tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Built for Stability. Designed for Growth..jpg',                 title: 'Built for Stability',              tag: 'Wealth',        category: 'investment' },
+  { src: './images/Business poster.jpg',                                           title: 'Business poster.jpg',              tag: 'Branding',      category: 'investment' },
+  { src: './images/Camping & Picnicking at Lake Narracan!.jpg',                    title: 'Lake Narracan',                    tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Compounding turns time into growth.jpg',                        title: 'time into growth',                 tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Earn Predictable Income Every Month.jpg',                       title: 'Income',                           tag: 'investment',    category: 'investment' },
+  { src: './images/Exclusive Investment Opportunity Lake Narracan Resort.jpg',     title: 'Lake Narracan',                    tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Horse Ride Through Gippslands Beauty.jpg',                      title: 'Lake Narracan',                    tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Horse Ride Through Gippslands Beauty.jpg',                      title: 'Star Investment',                  tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Lot 525 – A Once-in-a-Lifetime Sale Opportunity.jpg',           title: 'Lot 525',                          tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Lot 618  South-Facing Block with Park at Rear – Stage 6.jpg',   title: 'Lot 618',                          tag: 'Real Estate',   category: 'investment' },
+  { src: './images/LOT 640 – Premium North-Facing Homesite.jpg',                   title: 'Lot 640',                          tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Made for Living. Built for Life.jpg',                           title: 'Built for Life',                   tag: 'Real Estate',   category: 'investment' },
+  { src: './images/Monthly payouts Real cash flow Every month.jpg',                title: 'Monthly payouts',                  tag: 'Investment',    category: 'investment' },
+  { src: './images/One step can take your business into a whole new world .jpg',   title: 'Take your business',               tag: 'Investment',    category: 'investment' },
+  { src: './images/Premium Land in Lochinvar.jpg',                                 title: 'Premium Land in Lochinvar',        tag: 'Investment',    category: 'investment' },
+  { src: './images/Proven Track Record.jpg',                                       title: 'Proven Track Record',              tag: 'Investment',    category: 'investment' },
+  { src: './images/Scenic Walking Trails.jpg',                                     title: 'Scenic Walking Trails',            tag: 'Investment',    category: 'investment' },
+  { src: './images/Snowy River SRL-220S.jpg',                                      title: 'Snowy River SRL-220S',             tag: 'Investment',    category: 'investment' },
+  { src: './images/Star.jpg',                                                      title: 'Star Investment',                  tag: 'Investment',    category: 'investment' },
+  { src: './images/Start Building Smarter Returns with Star Investment.jpg',       title: 'Start Building',                   tag: 'Investment',    category: 'investment' },
+  { src: './images/Start Your Parkside Lifestyle at Lot 526.jpg',                  title: 'Lot 526',                          tag: 'Real Estate',    category: 'investment' },
+  { src: './images/Your Dream Home Starts Here — Custom Designs with Unlimited Choice.jpg',                  title: 'Your Dream Home',                          tag: 'Real Estate',    category: 'investment' },
+
 
   // ── CARAVANS ─────────────────────────────────────────────────────────
   { src: "./images/2024 Aussie Fivestar Eureka 18_6 Off-Road Touring Caravan – Explore Without Limits!.jpg", title: 'Aussie Fivestar Eureka',       tag: 'Caravan',           category: 'caravan' },
   { src: "./images/Grand City Explorer 18.6 Off-Road Luxury Caravan.jpg",                                    title: 'Grand City Explorer',          tag: 'Caravan',           category: 'caravan' },
-  { src: './images/Piazza PZ from Royal Flair Caravan.jpg',                                                  title: 'Royal Flair Piazza',           tag: 'Caravan',           category: 'caravan' },
   { src: './images/CFS - FB.jpg',                                                                            title: 'Caravans For Sale — Banner',   tag: 'Caravan Market',    category: 'caravan' },
   { src: './images/DEO-3-1.jpg',                                                                             title: 'Auscraft RV — Duo',            tag: 'Caravan Exterior',  category: 'caravan' },
   { src: './images/2025 Golf Savannah 501 Touring Pop Top — Compact Luxury on Wheels.jpg',                   title: 'Golf-Savana',                  tag: 'Caravan',           category: 'caravan' },
   { src: './images/2025 Legion Warrior 18.6 Off Road Built with Air Bag Suspension.jpg',                     title: 'Legion warrior',               tag: 'Caravan',           category: 'caravan' },
   { src: './images/2025 Sunseeker Merlin 20.6 Off Road caravan - Blends toughness with modern comfort!.jpg', title: 'Sun-seeker',                   tag: 'Caravan',           category: 'caravan' },
   { src: './images/2025 Vivid Nomad 21 Family Off-Road Triple Bunk – Adventure Starts Here!.jpg',            title: 'Nomad',                        tag: 'Caravan',           category: 'caravan' },
-  { src: './images/Adventure 5.7F - Triple Bunks. Ensuite. Off-Road.jpg',                                    title: 'Adventure 5.7F',               tag: 'Caraven',           category: 'caraven' },
-  { src: './images/Adventure Mode On Venture 15 Hybrid with Slide-Out Kitchen.jpg',                          title: 'Adventure Venture 15 Hybrid',  tag: 'Caraven',           category: 'caraven' },
-  { src: './images/Adventures start with the right caravan..jpg',                                            title: 'Adventures start with the right caravan', tag: 'Caraven Market', category: 'caraven' },
-  { src: './images/All Types of Caravans in One Place.jpg',                                                  title: 'Caravans in One Place',                   tag: 'Careven Market', category: 'caraven' },
-  { src: './images/Armorlite 16 Hybrid Tough Pop-Top Comfort.jpg', title: '', tag: '', category: '' },
+  { src: './images/Adventure 5.7F - Triple Bunks. Ensuite. Off-Road.jpg',                                    title: 'Adventure 5.7F',               tag: 'Caravan',           category: 'caravan' },
+  { src: './images/Adventure Mode On Venture 15 Hybrid with Slide-Out Kitchen.jpg',                          title: 'Adventure Venture 15 Hybrid',  tag: 'Caravan',           category: 'caravan' },
+  { src: './images/Adventures start with the right caravan..jpg',                                            title: 'Adventures start with the right caravan', tag: 'Caravan Market', category: 'caravan' },
+  { src: './images/All Types of Caravans in One Place.jpg',                                                  title: 'Caravans in One Place',                   tag: 'Carevan Market', category: 'caravan' },
+  { src: './images/Armorlite 16 Hybrid Tough Pop-Top Comfort.jpg',                                           title: 'Armorlite 16 Hybrid',          tag: 'Caravan',           category: 'caravan' },
+  { src: './images/CFS - FB.jpg',                                                                            title: 'CFS',                          tag: 'CFS',               category: 'caravan' },
+  { src: './images/Conquer the Track in Luxury with the 2025 Lotus Trooper 23.6.jpg',                        title: 'Conquer',                      tag: 'caravan',           category: 'caravan' },
+  { src: './images/Built for Two, Ready for Anywhere – Adventure Black Edition 6.3.jpg',                     title: 'Adventure Black Edition',      tag: 'caravan',           category: 'caravan' },
+  { src: './images/Daydream 29.6, Luxury Without Limits.jpg',                                                title: 'Daydream 29.6',                tag: 'caravan',           category: 'caravan' },
+  { src: './images/DEO-3-1.jpg',                                                                             title: 'DEO-3-1',                      tag: 'caravan',           category: 'caravan' },
+  { src: './images/Easy Tow Big Adventure – Western Star Cobba 12 Off Road.jpg',                             title: 'Star Cobba 12',                tag: 'caravan',           category: 'caravan' },
+  { src: './images/Experience the Journey in the 2025 Arctic Frost 15S Hybrid Off-Road Caravan.jpg',         title: 'Arctic Frost 15S Hybrid',      tag: 'caravan',           category: 'caravan' },
+  { src: './images/Five-Star Lounge Off-Road Tough — 2025 Masterpiece Performance 216.jpg',                  title: 'Five-Star Lounge Off-Road',    tag: 'caravan',           category: 'caravan' },
+  { src: './images/Get Ready for Off-Road Family Fun with the 2025 Nextgen SE 22F.jpg',                      title: 'Nextgen SE 22F',               tag: 'caravan',           category: 'caravan' },
+  { src: './images/Grand Caravans Tracker .jpg',                                                             title: 'Grand Caravans',               tag: 'caravan',           category: 'caravan' },
+  { src: './images/Grand City Explorer 18.6 Off-Road Luxury Caravan Now Available.jpg',                      title: 'Grand City Explorer',          tag: 'caravan',           category: 'caravan' },
+  { src: './images/Grand City Explorer 18.6 Off-Road Luxury Caravan.jpg',                                    title: 'Grand City Explorer',          tag: 'caravan',           category: 'caravan' },
+  { src: './images/Hit the Trails with Your Own Ensuite – Fortitude Holiday 18.6.jpg',                       title: 'Fortitude Holiday',            tag: 'caravan',           category: 'caravan' },
+  { src: './images/Jayco - CrossTrak.jpg',                                                                   title: 'Jayco - CrossTrak',            tag: 'caravan',           category: 'caravan' },
+  { src: './images/Lotus Caravans Off Grid.jpg',                                                             title: 'Lotus Caravans',               tag: 'caravan',           category: 'caravan' },
+  { src: './images/Lotus Trooper Platinum.jpg',                                                              title: 'Lotus Trooper',                tag: 'caravan',           category: 'caravan' },
+  { src: './images/Luxury Meets Mobility with the 2025 Viscount V1 17.8 Caravan.jpg',                        title: 'Viscount V1',                  tag: 'caravan',           category: 'caravan' },
+  { src: './images/Meet the 2024 Cobra 22 Off Road .jpg',                                                    title: 'Cobra 22',                     tag: 'caravan',           category: 'caravan' },
+  { src: './images/Loutes Trooper.png',                                                                      title: 'Loutes Trooper',               tag: 'caravan',           category: 'caravan' },
+  { src: './images/New 2026 Coronet Caravans arriving @ Dealerships Daily.jpg',                              title: 'Dealerships Daily',            tag: 'Carevan Market',    category: 'caravan' },
+  { src: './images/New Age Big Red.jpg',                                                                     title: 'New Age Big Red',              tag: 'caravan',           category: 'caravan' },
+  { src: './images/Off-Road Aesthetic Touring Comfort – 2025 Concept Innovation 630 20.6.jpg',               title: 'Concept Innovation 630',       tag: 'caravan',           category: 'caravan' },
+  { src: './images/Orbit - Leading Caravan Manufacturer with TIG-Welded Aluminum Frames - Mobile.jpg',       title: 'Orbit-Caravan Manufacturer',   tag: 'caravan',           category: 'caravan' },
+  { src: './images/Ready Set Explore The 2025 Coronet RV PTR 19.6.jpg',                                      title: 'Orbit-Caravan Manufacturer',   tag: 'caravan',           category: 'caravan' },
+  { src: './images/Start Your Trip in Regent Cruiser 21.6 Off-Road Couples Caravan.jpg',                     title: 'Regent Cruiser',               tag: 'caravan',           category: 'caravan' },
+  { src: './images/Travel Smart in 2025 – Newline T18 XR Series Touring Ensuite Caravan.jpg',                title: 'Newline T18 XR Series',        tag: 'caravan',           category: 'caravan' },
+  { src: './images/Travel Smarter in the 2025 Pembrey 18.9.jpg',                                             title: 'Pembrey 18.9',                 tag: 'caravan',           category: 'caravan' },
+  { src: './images/Ultimate 5-Berth Caravan Quick Guide.jpg',                                                title: 'Ultimate 5-Berth Caravan',     tag: 'caravan Interior',  category: 'caravan' },
+  { src: './images/Unlock Exclusive Caravan Deals Only at Caravans For Sale.jpg',                            title: 'Caravans For Sale',            tag: 'CFS',               category: 'caravan' },
+  { src: './images/With 1.387 caravans waiting for your next adventure across Queensland.jpg',               title: 'adventure across Queensland',  tag: 'caravan',           category: 'caravan' },
+  { src: './images/X Series RV Toy Hauler X Play 16 Off Road Family 3 Bunks Ensuite.jpg',                    title: 'X Series RV',                  tag: 'caravan',           category: 'caravan' },
+  { src: './images/XseriesRV.png',                                                                           title: 'X Series RV',                  tag: 'caravan',           category: 'caravan' },
 
   // ── PRODUCTS / F&B ───────────────────────────────────────────────────
   { src: './images/PLIX Design.jpg',                   title: 'Plix Skincare',         tag: 'Product',     category: 'product' },
@@ -1698,14 +1754,16 @@ const ALL_IMAGES = [
 
   // ── IT & DIGITAL ─────────────────────────────────────────────────────
   { src: './images/2easy IT.jpg',                                                  title: '2EasyIT — One Step',    tag: 'IT Services', category: 'it' },
+  { src: './images/Make Your .png',                                                title: 'Make Your Payment',     tag: 'IT Services', category: 'it' },
   { src: './images/One step can take your business into a whole new world .jpg',   title: '2EasyIT — New World',   tag: 'IT Services', category: 'it' },
-  { src: './images/', title: '', tag: '', category: '' },
-  { src: './images/', title: '', tag: '', category: '' },
-  { src: './images/', title: '', tag: '', category: '' },
-  { src: './images/', title: '', tag: '', category: '' },
-  { src: './images/', title: '', tag: '', category: '' },
+  
 
   // ── OTHER (add uncategorised images here) ────────────────────────────
+  { src: './images/generators.jpg',           title: 'Generators',      tag: 'GPTTools',    category: 'other'},
+  { src: './images/jack hammer.jpg',          title: 'Jack hammer',     tag: 'GPTTools',    category: 'other'},
+  { src: './images/Music.png',                title: 'Music',           tag: 'Music',       category: 'other'},
+  { src: './images/tile cutter.jpg',          title: 'Tile cutter',     tag: 'GPTTools',    category: 'other'},
+  { src: './images/TOOLS MOBILE .jpg',        title: 'Tools Mobile',    tag: 'GPTTools',    category: 'other'},
   // { src: './images/example.jpg', title: 'Example', tag: 'Other', category: 'other' },
 ];
 
