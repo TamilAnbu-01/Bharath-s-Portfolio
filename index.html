@@ -324,7 +324,7 @@ nav::after {
 }
 
 /* ─────────────────────────────────────────
-   ROTATING IMAGE STRIP — used in both hero area & selected work
+   ROTATING IMAGE STRIP
 ───────────────────────────────────────── */
 .rotating-strip {
   position: relative;
@@ -376,7 +376,7 @@ nav::after {
   color: var(--white);
 }
 
-/* Loading progress bar */
+/* Loading bar */
 .r-progress {
   position: absolute;
   bottom: 0; left: 0;
@@ -409,7 +409,7 @@ nav::after {
 @media (max-width: 900px) { .r-dot { cursor: pointer; } }
 
 /* ─────────────────────────────────────────
-   HOME — SELECTED WORK (rotating strip layout)
+   HOME — SELECTED WORK
 ───────────────────────────────────────── */
 .work-strip-section {
   padding: 100px 60px;
@@ -431,14 +431,12 @@ nav::after {
   background: var(--border);
 }
 
-/* Selected work: big rotating strip LEFT + 2x2 thumb grid RIGHT = 5 images */
 .work-feature-layout {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 12px;
   align-items: stretch;
 }
-/* The rotating strip fills the full height of the right column */
 .work-feature-layout .rotating-strip {
   height: 100%;
   min-height: 480px;
@@ -546,7 +544,6 @@ nav::after {
   .services-row { grid-template-columns: 1fr; }
 }
 
-/* Clients / tools strip */
 .tools-marquee-wrap {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
@@ -575,7 +572,7 @@ nav::after {
 }
 
 /* ─────────────────────────────────────────
-   GET IN TOUCH POPUP
+   GET IN TOUCH
 ───────────────────────────────────────── */
 #contact-popup {
   position: fixed;
@@ -792,7 +789,6 @@ nav::after {
   .about-h2 { font-size: clamp(2.2rem, 9vw, 3.5rem); }
 }
 
-/* Experience timeline */
 .exp-section {
   padding: 80px 60px;
   border-bottom: 1px solid var(--border);
@@ -915,7 +911,6 @@ nav::after {
   .skills-hero { padding: 110px 20px 60px; }
 }
 
-/* Tools grid */
 .tools-section { padding: 80px 60px; border-bottom: 1px solid var(--border); }
 .tools-grid {
   display: grid;
@@ -1017,7 +1012,7 @@ nav::after {
   .ai-pill { font-size: 0.55rem; padding: 8px 14px; }
 }
 
-/* Work samples gallery */
+/* Work samples */
 .gallery-section { padding: 80px 60px; border-bottom: 1px solid var(--border); }
 .gallery-tabs {
   display: flex; gap: 0;
@@ -1658,13 +1653,6 @@ footer {
 /* ════════════════════════════════════════
    IMAGE REGISTRY
    ─────────────────────────────────────
-   To add an image: just add one object to the array below.
-   Fields:
-     src      — file path relative to index.html
-     title    — display title
-     tag      — label shown on the image
-     category — one of: 'investment' | 'caravan' | 'product' | 'it' | 'other'
-════════════════════════════════════════ */
 const ALL_IMAGES = [
   // ── INVESTMENT / REAL ESTATE ──────────────────────────────────────────
   { src: './images/Proven Track Record.jpg',                                       title: 'Proven Track Record',              tag: 'Social Media',  category: 'investment' },
@@ -1778,10 +1766,7 @@ function shuffle(arr) {
 
 /* ════════════════════════════════════════
    ROTATING STRIP FACTORY
-   Creates a self-contained rotating slideshow inside `container`.
-   `images`       — array of { src, title, tag }
-   `slideDuration`— ms per slide
-════════════════════════════════════════ */
+   ════════════════════════════════════════ */
 function buildRotatingStrip(container, images, slideDuration = 5000) {
   if (!images.length) return;
 
@@ -1803,7 +1788,7 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
     const imgEl = document.createElement('img');
     imgEl.src = img.src;
     imgEl.alt = img.title;
-    imgEl.loading = i < 2 ? 'eager' : 'lazy';  // lazy load all but first 2
+    imgEl.loading = i < 2 ? 'eager' : 'lazy';
     imgEl.decoding = 'async';
     slide.appendChild(imgEl);
 
@@ -1829,7 +1814,7 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
   function startProgress() {
     progressBar.classList.remove('animating');
     progressBar.style.width = '0%';
-    void progressBar.offsetWidth; // reflow
+    void progressBar.offsetWidth;
     progressBar.classList.add('animating');
     progressBar.style.transitionDuration = slideDuration + 'ms';
     progressBar.style.width = '100%';
@@ -1864,19 +1849,15 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
 }
 
 /* ════════════════════════════════════════
-   BUILD "SELECTED WORK" STRIP (home page)
-   — Takes 5 random images, rotates them in the big strip
-   — Shows 2 static thumb images beside it (next 2 in shuffle)
-════════════════════════════════════════ */
+   "SELECTED WORK" STRIP (home page)
+ ════════════════════════════════════════ */
 (function buildSelectedWork() {
   const shuffled = shuffle(ALL_IMAGES);
 
-  // First 5 images → rotating strip
   const stripImages = shuffled.slice(0, 5);
   const stripContainer = document.getElementById('selectedWorkStrip');
   buildRotatingStrip(stripContainer, stripImages, 5000);
 
-  // Next 4 images → static thumbs in 2x2 grid (click to lightbox)
   const thumbImages = shuffled.slice(5, 9);
   const thumbsContainer = document.getElementById('selectedWorkThumbs');
   thumbImages.forEach(img => {
@@ -1902,12 +1883,8 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
 
 /* ════════════════════════════════════════
    BUILD GALLERY TABS (skills page)
-   — Reads ALL_IMAGES, groups by category
-   — Creates tabs + panels dynamically
-   — All images use loading="lazy"
-════════════════════════════════════════ */
+  ════════════════════════════════════════ */
 (function buildGallery() {
-  // Category config: key → display label (order matters for tab order)
   const CATEGORIES = {
     all:        'All Work',
     investment: 'Investment',
@@ -1920,7 +1897,6 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
   const tabsEl   = document.getElementById('galleryTabs');
   const panelsEl = document.getElementById('galleryPanels');
 
-  // Group images by category
   const grouped = {};
   ALL_IMAGES.forEach(img => {
     const cat = img.category || 'other';
@@ -1928,7 +1904,6 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
     grouped[cat].push(img);
   });
 
-  // Determine which tabs to show (skip 'other' if empty)
   const activeCats = Object.keys(CATEGORIES).filter(cat => {
     if (cat === 'all') return true;
     return grouped[cat] && grouped[cat].length > 0;
@@ -1941,14 +1916,12 @@ function buildRotatingStrip(container, images, slideDuration = 5000) {
     const isFirst = firstTab;
     firstTab = false;
 
-    // Tab button
     const btn = document.createElement('button');
     btn.className = 'g-tab' + (isFirst ? ' active' : '');
     btn.textContent = label;
     btn.addEventListener('click', () => switchTab(cat, btn));
     tabsEl.appendChild(btn);
 
-    // Panel
     const panel = document.createElement('div');
     panel.className = 'gallery-panel gallery-masonry' + (isFirst ? ' active' : '');
     panel.id = 'tab-' + cat;
@@ -2118,7 +2091,7 @@ function animStrips(direction, cb) {
 function navigateTo(name, save = true) {
   if (name === current || isAnimating) return;
   isAnimating = true;
-  if (save) sessionStorage.setItem('currentPage', name); // sessionStorage: same page on refresh, home on new visit
+  if (save) sessionStorage.setItem('currentPage', name);
   animStrips('in', () => {
     document.getElementById(pages[current]).classList.remove('active');
     current = name;
